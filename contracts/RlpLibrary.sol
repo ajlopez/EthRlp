@@ -5,7 +5,7 @@ library RlpLibrary {
         byte first = data[offset];
         
         if (first > 0x80)
-            return uint8(first & 0x7f) + 1;
+            return uint8(first) - 0x80 + 1;
             
         return 1;
     }
@@ -14,7 +14,7 @@ library RlpLibrary {
         byte first = data[offset];
         
         if (first > 0x80)
-            return uint8(first & 0x7f);
+            return uint8(first) - 0x80;
             
         if (first == 0x80)
             return 0;
