@@ -4,7 +4,7 @@ RLP functions for Ethereum/RSK, WIP
 
 ## References
 
-TBD
+- [Solidity RLP](https://github.com/hamdiallam/Solidity-RLP)
 
 ## License
 

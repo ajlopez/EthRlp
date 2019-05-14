@@ -2,12 +2,20 @@ pragma solidity 0.5.0;
 
 library RlpLibrary {
     function getRlpTotalLength(bytes memory data, uint offset) pure internal returns (uint) {
+        byte first = data[offset];
+        
+        if (first > 0x80)
+            return uint8(first & 0x7f) + 1;
+            
         return 1;
     }
     
     function getRlpLength(bytes memory data, uint offset) pure internal returns (uint) {
         byte first = data[offset];
         
+        if (first > 0x80)
+            return uint8(first & 0x7f);
+            
         if (first == 0x80)
             return 0;
             
@@ -15,7 +23,7 @@ library RlpLibrary {
     }
     
     function getRlpOffset(bytes memory data, uint offset) pure internal returns (uint) {
-        return 0;
+        return getRlpTotalLength(data, offset) - getRlpLength(data, offset);
     }
 }
 

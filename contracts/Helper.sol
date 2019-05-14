@@ -10,5 +10,9 @@ contract Helper {
     function getRlpLength(bytes memory data, uint offset) public pure returns (uint) {
         return RlpLibrary.getRlpLength(data, offset);
     }
+    
+    function getRlpOffset(bytes memory data, uint offset) public pure returns (uint) {
+        return RlpLibrary.getRlpOffset(data, offset);
+    }
 }
 
