@@ -6,8 +6,26 @@ contract('RlpLibrary', function (accounts) {
         this.helper = await Helper.new();
     });
     
+    it('get length 0', async function () {
+        const result = await this.helper.getRlpLength('0x80', 0);
+        
+        assert.equal(result, 0);
+    });
+    
+    it('get length 0 using offset', async function () {
+        const result = await this.helper.getRlpLength('0x010280', 2);
+        
+        assert.equal(result, 0);
+    });
+    
     it('get length 1', async function () {
         const result = await this.helper.getRlpLength('0x01', 0);
+        
+        assert.equal(result, 1);
+    });
+    
+    it('get length 1 using offset', async function () {
+        const result = await this.helper.getRlpLength('0x800203', 2);
         
         assert.equal(result, 1);
     });
