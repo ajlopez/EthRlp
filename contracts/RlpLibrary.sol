@@ -1,6 +1,10 @@
 pragma solidity 0.5.0;
 
 library RlpLibrary {
+    function getRlpTotalLength(bytes memory data, uint offset) pure internal returns (uint) {
+        return 1;
+    }
+    
     function getRlpLength(bytes memory data, uint offset) pure internal returns (uint) {
         byte first = data[offset];
         

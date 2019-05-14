@@ -6,6 +6,30 @@ contract('RlpLibrary', function (accounts) {
         this.helper = await Helper.new();
     });
     
+    it('get total length 1 from encoded empty array', async function () {
+        const result = await this.helper.getRlpTotalLength('0x80', 0);
+        
+        assert.equal(result, 1);
+    });
+    
+    it('get total length 1 from encoded empty array using offset', async function () {
+        const result = await this.helper.getRlpTotalLength('0x010280', 2);
+        
+        assert.equal(result, 1);
+    });
+    
+    it('get total length 1', async function () {
+        const result = await this.helper.getRlpTotalLength('0x01', 0);
+        
+        assert.equal(result, 1);
+    });
+    
+    it('get total length 1 using offset', async function () {
+        const result = await this.helper.getRlpTotalLength('0x010203', 2);
+        
+        assert.equal(result, 1);
+    });
+    
     it('get length 0', async function () {
         const result = await this.helper.getRlpLength('0x80', 0);
         
