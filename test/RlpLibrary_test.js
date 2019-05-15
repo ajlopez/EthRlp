@@ -86,9 +86,9 @@ contract('RlpLibrary', function (accounts) {
         const data = rlp.encode('');
         const str = toHexString(data);
         
-        const length = await this.helper.getRlpLength(data, 0);
-        const tlength = await this.helper.getRlpTotalLength(data, 0);
-        const offset = await this.helper.getRlpOffset(data, 0);
+        const length = await this.helper.getRlpLength(str, 0);
+        const tlength = await this.helper.getRlpTotalLength(str, 0);
+        const offset = await this.helper.getRlpOffset(str, 0);
         
         assert.equal(length, 0);
         assert.equal(tlength, 1);
@@ -99,9 +99,9 @@ contract('RlpLibrary', function (accounts) {
         const data = rlp.encode('a');
         const str = toHexString(data);
         
-        const length = await this.helper.getRlpLength(data, 0);
-        const tlength = await this.helper.getRlpTotalLength(data, 0);
-        const offset = await this.helper.getRlpOffset(data, 0);
+        const length = await this.helper.getRlpLength(str, 0);
+        const tlength = await this.helper.getRlpTotalLength(str, 0);
+        const offset = await this.helper.getRlpOffset(str, 0);
         
         assert.equal(length, 1);
         assert.equal(tlength, 1);
@@ -112,13 +112,33 @@ contract('RlpLibrary', function (accounts) {
         const data = rlp.encode('ab');
         const str = toHexString(data);
         
-        const length = await this.helper.getRlpLength(data, 0);
-        const tlength = await this.helper.getRlpTotalLength(data, 0);
-        const offset = await this.helper.getRlpOffset(data, 0);
+        const length = await this.helper.getRlpLength(str, 0);
+        const tlength = await this.helper.getRlpTotalLength(str, 0);
+        const offset = await this.helper.getRlpOffset(str, 0);
         
         assert.equal(length, 2);
         assert.equal(tlength, 3);
         assert.equal(offset, 1);
+    });
+    
+    it('process encoded 56 bytes array', async function() {
+        let message = '1234567';
+        message += message;
+        message += message;
+        message += message;
+        
+        assert.equal(message.length, 56);
+        
+        const data = rlp.encode(message);
+        const str = toHexString(data);
+        
+        const length = await this.helper.getRlpLength(str, 0);
+        const tlength = await this.helper.getRlpTotalLength(str, 0);
+        const offset = await this.helper.getRlpOffset(str, 0);
+        
+        assert.equal(length, message.length);
+        assert.equal(tlength, message.length + 2);
+        assert.equal(offset, 2);
     });
 });
 
