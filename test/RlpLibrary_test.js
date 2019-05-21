@@ -140,5 +140,29 @@ contract('RlpLibrary', function (accounts) {
         assert.equal(tlength, message.length + 2);
         assert.equal(offset, 2);
     });
+    
+    it('process encoded 1024 bytes array', async function() {
+        let message = '01234567';
+        message += message;
+        message += message;
+        message += message;
+        message += message;
+        message += message;
+        message += message;
+        message += message;
+        
+        assert.equal(message.length, 1024);
+        
+        const data = rlp.encode(message);
+        const str = toHexString(data);
+        
+        const length = await this.helper.getRlpLength(str, 0);
+        const tlength = await this.helper.getRlpTotalLength(str, 0);
+        const offset = await this.helper.getRlpOffset(str, 0);
+        
+        assert.equal(length, message.length);
+        assert.equal(tlength, message.length + 3);
+        assert.equal(offset, 3);
+    });
 });
 
