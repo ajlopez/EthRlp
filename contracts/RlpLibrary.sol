@@ -4,6 +4,18 @@ library RlpLibrary {
     function getRlpTotalLength(bytes memory data, uint offset) pure internal returns (uint) {
         byte first = data[offset];
         
+        if (first > 0xf7) {
+            uint nbytes = uint8(first) - 0xf7;
+            uint length;
+            
+            for (uint k = 0; k < nbytes; k++) {
+                length <<= 8;
+                length += uint8(data[1 + k + offset]);
+            }
+            
+            return 1 + nbytes + length; 
+        }
+
         if (first > 0xc0)
             return uint8(first) - 0xc0 + 1;
 
@@ -27,6 +39,18 @@ library RlpLibrary {
     
     function getRlpLength(bytes memory data, uint offset) pure internal returns (uint) {
         byte first = data[offset];
+        
+        if (first > 0xf7) {
+            uint nbytes = uint8(first) - 0xf7;
+            uint length;
+            
+            for (uint k = 0; k < nbytes; k++) {
+                length <<= 8;
+                length += uint8(data[1 + k + offset]);
+            }
+            
+            return length;
+        }
         
         if (first > 0xc0)
             return uint8(first) - 0xc0;

@@ -252,5 +252,54 @@ contract('RlpLibrary', function (accounts) {
         
         assert.equal(result, 1);
     });
+    
+    
+    it('process list with one tiny item', async function () {
+        let text = "0123456789";
+        
+        const data = rlp.encode([text]);
+        const str = toHexString(data);
+        
+        const offset = await this.helper.getRlpOffset(str, 0);
+        assert.equal(offset, 1);
+        const length = await this.helper.getRlpLength(str, 0);
+        assert.equal(length, 11);
+        const tlength = await this.helper.getRlpTotalLength(str, 0);
+        assert.equal(tlength, 12);
+    });
+
+    it('process list with one short item', async function () {
+        let text = "0123456789";
+        text += text;
+        text += text;
+        text += "01234567890123";
+        
+        const data = rlp.encode([text]);
+        const str = toHexString(data);
+        
+        const offset = await this.helper.getRlpOffset(str, 0);
+        assert.equal(offset, 1);
+        const length = await this.helper.getRlpLength(str, 0);
+        assert.equal(length, 55);
+        const tlength = await this.helper.getRlpTotalLength(str, 0);
+        assert.equal(tlength, 56);
+    });
+    
+    it('process list with one not so short item', async function () {
+        let text = "0123456789";
+        text += text;
+        text += text;
+        text += "012345678901234";
+        
+        const data = rlp.encode([text]);
+        const str = toHexString(data);
+        
+        const offset = await this.helper.getRlpOffset(str, 0);
+        assert.equal(offset, 2);
+        const length = await this.helper.getRlpLength(str, 0);
+        assert.equal(length, 56);
+        const tlength = await this.helper.getRlpTotalLength(str, 0);
+        assert.equal(tlength, 58);
+    });
 });
 
