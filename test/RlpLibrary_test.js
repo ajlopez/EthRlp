@@ -225,5 +225,32 @@ contract('RlpLibrary', function (accounts) {
         assert.equal(tlength, message.length + 4);
         assert.equal(offset, 4);
     });
+    
+    it('get total length simple list with two short items', async function () {
+        const data = rlp.encode(['a', 'b']);
+        const str = toHexString(data);
+
+        const result = await this.helper.getRlpTotalLength(str, 0);
+        
+        assert.equal(result, 3);
+    });
+    
+    it('get length simple list with two short items', async function () {
+        const data = rlp.encode(['a', 'b']);
+        const str = toHexString(data);
+
+        const result = await this.helper.getRlpLength(str, 0);
+        
+        assert.equal(result, 2);
+    });
+    
+    it('get offset simple list with two short items', async function () {
+        const data = rlp.encode(['a', 'b']);
+        const str = toHexString(data);
+
+        const result = await this.helper.getRlpOffset(str, 0);
+        
+        assert.equal(result, 1);
+    });
 });
 
