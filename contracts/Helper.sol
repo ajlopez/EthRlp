@@ -14,5 +14,11 @@ contract Helper {
     function getRlpOffset(bytes memory data, uint offset) public pure returns (uint) {
         return RlpLibrary.getRlpOffset(data, offset);
     }
+    
+    function getRlpItem(bytes memory data, uint offset) public pure returns (uint itemOffset, uint itemLength) {
+        RlpLibrary.RlpItem memory item = RlpLibrary.getRlpItem(data, offset);
+        
+        return (item.offset, item.length);
+    }
 }
 

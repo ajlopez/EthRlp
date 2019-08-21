@@ -26,6 +26,95 @@ contract('RlpLibrary', function (accounts) {
         this.helper = await Helper.new();
     });
     
+    it('get RLP item from encoded empty array', async function () {
+        const data = rlp.encode('');
+        const str = toHexString(data);
+
+        const result = await this.helper.getRlpItem(str, 0);
+        
+        assert.equal(result.itemOffset, 1);
+        assert.equal(result.itemLength, 0);
+    });
+
+    it('get RLP item with one byte', async function () {
+        const data = rlp.encode('a');
+        const str = toHexString(data);
+
+        const result = await this.helper.getRlpItem(str, 0);
+        
+        assert.equal(result.itemOffset, 0);
+        assert.equal(result.itemLength, 1);
+    });
+    
+    it('get RLP item with two bytes', async function () {
+        const data = rlp.encode('aa');
+        const str = toHexString(data);
+
+        const result = await this.helper.getRlpItem(str, 0);
+        
+        assert.equal(result.itemOffset, 1);
+        assert.equal(result.itemLength, 2);
+    });
+    
+    it('get RLP item with 56 bytes', async function () {
+        let message = '1234567';
+        message += message;
+        message += message;
+        message += message;
+        
+        assert.equal(message.length, 56);
+        
+        const data = rlp.encode(message);
+        const str = toHexString(data);
+
+        const result = await this.helper.getRlpItem(str, 0);
+        
+        assert.equal(result.itemOffset, 2);
+        assert.equal(result.itemLength, 56);
+    });
+    
+    it('get RLP item with 1024 bytes', async function () {
+        let message = '01234567';
+        message += message;
+        message += message;
+        message += message;
+        message += message;
+        message += message;
+        message += message;
+        message += message;
+        
+        assert.equal(message.length, 1024);
+        
+        const data = rlp.encode(message);
+        const str = toHexString(data);
+
+        const result = await this.helper.getRlpItem(str, 0);
+        
+        assert.equal(result.itemOffset, 3);
+        assert.equal(result.itemLength, 1024);
+    });
+    
+    it('get RLP item with 1024 bytes using offset', async function () {
+        let message = '01234567';
+        message += message;
+        message += message;
+        message += message;
+        message += message;
+        message += message;
+        message += message;
+        message += message;
+        
+        assert.equal(message.length, 1024);
+        
+        const data = rlp.encode(message);
+        const str = concat('0x010203', toHexString(data));
+
+        const result = await this.helper.getRlpItem(str, 3);
+        
+        assert.equal(result.itemOffset, 6);
+        assert.equal(result.itemLength, 1024);
+    });
+
     it('get total length 1 from encoded empty array', async function () {
         const data = rlp.encode('');
         const str = toHexString(data);

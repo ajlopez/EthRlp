@@ -6,7 +6,7 @@ library RlpLibrary {
         uint length;
     }
     
-    function isList(bytes memory data, uint offset) pure internal returns (bool) {
+    function isRlpList(bytes memory data, uint offset) pure internal returns (bool) {
         return data[offset] > 0xc0;
     }
     
@@ -86,7 +86,12 @@ library RlpLibrary {
     }
     
     function getRlpOffset(bytes memory data, uint offset) pure internal returns (uint) {
-        return getRlpTotalLength(data, offset) - getRlpLength(data, offset);
+        return getRlpTotalLength(data, offset) - getRlpLength(data, offset) + offset;
+    }
+    
+    function getRlpItem(bytes memory data, uint offset) pure internal returns (RlpItem memory item) {
+        item.length = getRlpLength(data, offset);
+        item.offset = getRlpTotalLength(data, offset) - item.length + offset;
     }
 }
 
