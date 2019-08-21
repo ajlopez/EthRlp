@@ -94,20 +94,35 @@ library RlpLibrary {
         item.offset = getRlpTotalLength(data, offset) - item.length + offset;
     }
     
-    function getNumItems(bytes memory data, uint offset) pure internal returns (uint) {
+    function getRlpNumItems(bytes memory data, uint offset) pure internal returns (uint) {
         RlpItem memory item = getRlpItem(data, offset);
         
-        uint offset = item.offset;
+        uint itemOffset = item.offset;
         uint end = item.offset + item.length;
         uint nitems = 0;
         
-        while (offset < end) {
+        while (itemOffset < end) {
             nitems++;
-            item = getRlpItem(data, offset);
-            offset = item.offset + item.length;
+            item = getRlpItem(data, itemOffset);
+            itemOffset = item.offset + item.length;
         }
         
         return nitems;
+    }
+
+    function getRlpItems(bytes memory data, uint offset) pure internal returns (RlpItem[] memory items) {
+        uint nitems = getRlpNumItems(data, offset);
+        items = new RlpItem[](nitems);
+        
+        RlpItem memory item = getRlpItem(data, offset);
+        
+        uint itemOffset = item.offset;
+
+        for (uint k = 0; k < nitems; k++) {
+            item = getRlpItem(data, itemOffset);
+            items[k] = item;
+            itemOffset = item.offset + item.length;
+        }
     }
 }
 

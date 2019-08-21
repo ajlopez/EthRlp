@@ -21,8 +21,22 @@ contract Helper {
         return (item.offset, item.length);
     }
     
-    function getNumItems(bytes memory data, uint offset) public pure returns (uint) {
-        return RlpLibrary.getNumItems(data, offset);
+    function getRlpNumItems(bytes memory data, uint offset) public pure returns (uint) {
+        return RlpLibrary.getRlpNumItems(data, offset);
+    }
+    
+    function getRlpItems(bytes memory data, uint offset) public pure returns (uint[] memory offsets, uint[] memory lengths) {
+        RlpLibrary.RlpItem[] memory items = RlpLibrary.getRlpItems(data, offset);
+        
+        uint nitems = items.length;
+        
+        offsets = new uint[](nitems);
+        lengths = new uint[](nitems);
+        
+        for (uint k = 0; k < nitems; k++) {
+            offsets[k] = items[k].offset;
+            lengths[k] = items[k].length;
+        }
     }
 }
 

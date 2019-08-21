@@ -322,7 +322,7 @@ contract('RlpLibrary', function (accounts) {
         
         assert.equal(result, 1);
         
-        const nitems = await this.helper.getNumItems(str, 0);
+        const nitems = await this.helper.getRlpNumItems(str, 0);
         
         assert.equal(nitems, 2);
     });
@@ -341,7 +341,7 @@ contract('RlpLibrary', function (accounts) {
         const tlength = await this.helper.getRlpTotalLength(str, 0);
         assert.equal(tlength, 12);
         
-        const nitems = await this.helper.getNumItems(str, 0);
+        const nitems = await this.helper.getRlpNumItems(str, 0);
         
         assert.equal(nitems, 1);
     });
@@ -362,7 +362,7 @@ contract('RlpLibrary', function (accounts) {
         const tlength = await this.helper.getRlpTotalLength(str, 0);
         assert.equal(tlength, 56);
         
-        const nitems = await this.helper.getNumItems(str, 0);
+        const nitems = await this.helper.getRlpNumItems(str, 0);
         
         assert.equal(nitems, 1);
     });
@@ -383,12 +383,17 @@ contract('RlpLibrary', function (accounts) {
         const tlength = await this.helper.getRlpTotalLength(str, 0);
         assert.equal(tlength, 58);
         
-        const nitems = await this.helper.getNumItems(str, 0);
+        const nitems = await this.helper.getRlpNumItems(str, 0);
         
         assert.equal(nitems, 1);
+        
+        const items = await this.helper.getRlpItems(str, 0);
+        
+        assert.equal(items.offsets[0], 3);
+        assert.equal(items.lengths[0], 55);
     });
     
-    it('process list with two not so short item', async function () {
+    it('process list with two not so short items', async function () {
         let text = "0123456789";
         text += text;
         text += text;
@@ -404,9 +409,44 @@ contract('RlpLibrary', function (accounts) {
         const tlength = await this.helper.getRlpTotalLength(str, 0);
         assert.equal(tlength, 56 * 2 + 2);
         
-        const nitems = await this.helper.getNumItems(str, 0);
+        const nitems = await this.helper.getRlpNumItems(str, 0);
         
         assert.equal(nitems, 2);
+        
+        const items = await this.helper.getRlpItems(str, 0);
+        
+        assert.equal(items.offsets[0], 3);
+        assert.equal(items.lengths[0], 55);
+        assert.equal(items.offsets[1], 3 + 56);
+        assert.equal(items.lengths[1], 55);
+    });
+    
+    it('process list with two not so short items using offset', async function () {
+        let text = "0123456789";
+        text += text;
+        text += text;
+        text += "012345678901234";
+        
+        const data = rlp.encode([text, text]);
+        const str = concat('0x010203', toHexString(data));
+        
+        const offset = await this.helper.getRlpOffset(str, 3);
+        assert.equal(offset, 2 + 3);
+        const length = await this.helper.getRlpLength(str, 3);
+        assert.equal(length, 56 * 2);
+        const tlength = await this.helper.getRlpTotalLength(str, 3);
+        assert.equal(tlength, 56 * 2 + 2);
+        
+        const nitems = await this.helper.getRlpNumItems(str, 3);
+        
+        assert.equal(nitems, 2);
+        
+        const items = await this.helper.getRlpItems(str, 3);
+        
+        assert.equal(items.offsets[0], 3 + 3);
+        assert.equal(items.lengths[0], 55);
+        assert.equal(items.offsets[1], 3 + 56 + 3);
+        assert.equal(items.lengths[1], 55);
     });
 });
 
