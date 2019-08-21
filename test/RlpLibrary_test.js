@@ -1,5 +1,5 @@
 
-const Helper = artifacts.require('./Helper.sol');
+const RlpHelper = artifacts.require('./RlpHelper.sol');
 
 const rlp = require('rlp');
 
@@ -26,7 +26,7 @@ function toHexString(buffer) {
 
 contract('RlpLibrary', function (accounts) {
     beforeEach(async function () {
-        this.helper = await Helper.new();
+        this.helper = await RlpHelper.new();
     });
     
     it('get RLP item from encoded empty array', async function () {
