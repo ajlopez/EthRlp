@@ -20,5 +20,9 @@ contract Helper {
         
         return (item.offset, item.length);
     }
+    
+    function getNumItems(bytes memory data, uint offset) public pure returns (uint) {
+        return RlpLibrary.getNumItems(data, offset);
+    }
 }
 

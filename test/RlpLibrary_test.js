@@ -321,6 +321,10 @@ contract('RlpLibrary', function (accounts) {
         const result = await this.helper.getRlpOffset(str, 0);
         
         assert.equal(result, 1);
+        
+        const nitems = await this.helper.getNumItems(str, 0);
+        
+        assert.equal(nitems, 2);
     });
     
     
@@ -336,6 +340,10 @@ contract('RlpLibrary', function (accounts) {
         assert.equal(length, 11);
         const tlength = await this.helper.getRlpTotalLength(str, 0);
         assert.equal(tlength, 12);
+        
+        const nitems = await this.helper.getNumItems(str, 0);
+        
+        assert.equal(nitems, 1);
     });
 
     it('process list with one short item', async function () {
@@ -353,6 +361,10 @@ contract('RlpLibrary', function (accounts) {
         assert.equal(length, 55);
         const tlength = await this.helper.getRlpTotalLength(str, 0);
         assert.equal(tlength, 56);
+        
+        const nitems = await this.helper.getNumItems(str, 0);
+        
+        assert.equal(nitems, 1);
     });
     
     it('process list with one not so short item', async function () {
@@ -370,6 +382,31 @@ contract('RlpLibrary', function (accounts) {
         assert.equal(length, 56);
         const tlength = await this.helper.getRlpTotalLength(str, 0);
         assert.equal(tlength, 58);
+        
+        const nitems = await this.helper.getNumItems(str, 0);
+        
+        assert.equal(nitems, 1);
+    });
+    
+    it('process list with two not so short item', async function () {
+        let text = "0123456789";
+        text += text;
+        text += text;
+        text += "012345678901234";
+        
+        const data = rlp.encode([text, text]);
+        const str = toHexString(data);
+        
+        const offset = await this.helper.getRlpOffset(str, 0);
+        assert.equal(offset, 2);
+        const length = await this.helper.getRlpLength(str, 0);
+        assert.equal(length, 56 * 2);
+        const tlength = await this.helper.getRlpTotalLength(str, 0);
+        assert.equal(tlength, 56 * 2 + 2);
+        
+        const nitems = await this.helper.getNumItems(str, 0);
+        
+        assert.equal(nitems, 2);
     });
 });
 

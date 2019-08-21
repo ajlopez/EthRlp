@@ -93,5 +93,21 @@ library RlpLibrary {
         item.length = getRlpLength(data, offset);
         item.offset = getRlpTotalLength(data, offset) - item.length + offset;
     }
+    
+    function getNumItems(bytes memory data, uint offset) pure internal returns (uint) {
+        RlpItem memory item = getRlpItem(data, offset);
+        
+        uint offset = item.offset;
+        uint end = item.offset + item.length;
+        uint nitems = 0;
+        
+        while (offset < end) {
+            nitems++;
+            item = getRlpItem(data, offset);
+            offset = item.offset + item.length;
+        }
+        
+        return nitems;
+    }
 }
 
