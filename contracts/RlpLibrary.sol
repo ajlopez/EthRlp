@@ -1,6 +1,15 @@
 pragma solidity 0.5.0;
 
 library RlpLibrary {
+    struct RlpItem {
+        uint offset;
+        uint length;
+    }
+    
+    function isList(bytes memory data, uint offset) pure internal returns (bool) {
+        return data[offset] > 0xc0;
+    }
+    
     function getRlpTotalLength(bytes memory data, uint offset) pure internal returns (uint) {
         byte first = data[offset];
         

@@ -195,34 +195,15 @@ contract('RlpLibrary', function (accounts) {
         assert.equal(offset, 4);
     });
     
-    it('process encoded 2*256*256 bytes array', async function() {
-        let message = '01234567';
-        message += message;
-        message += message;
-        message += message;
-        message += message;
-        message += message;
-        message += message;
-        message += message;
-        message += message;
-        message += message;
-        message += message;
-        message += message;
-        message += message;
-        message += message;
-        message += message;
-        
-        assert.equal(message.length, 2 * 256 * 256);
-        
-        const data = rlp.encode(message);
-        const str = toHexString(data);
+    it('process encoded 2*256*256 bytes array', async function() {        
+        const str = '0xba020000';
         
         const length = await this.helper.getRlpLength(str, 0);
         const tlength = await this.helper.getRlpTotalLength(str, 0);
         const offset = await this.helper.getRlpOffset(str, 0);
         
-        assert.equal(length, message.length);
-        assert.equal(tlength, message.length + 4);
+        assert.equal(length, 2 * 256 * 256);
+        assert.equal(tlength, 2 * 256 * 256 + 4);
         assert.equal(offset, 4);
     });
     
