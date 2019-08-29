@@ -536,45 +536,17 @@ contract('RlpLibrary', function (accounts) {
         
         assert.equal(nitems2, 5);
         
-        console.log('log 0');
-        const nitems3 = (await this.helper.getRlpNumItems(str, items.offsets[3])).toNumber();
-        const items3 = await this.helper.getRlpItems(str, items.offsets[3]);
+        for (let k = 0; k < nitems2; k++) {
+            const offset = k === 0 ? items.offsets[3].toNumber() : items2.offsets[k - 1].toNumber() + items2.lengths[k - 1].toNumber();
+            
+            console.log('log', k);
+            const nitemslog = (await this.helper.getRlpNumItems(str, offset)).toNumber();
+            const itemslog = await this.helper.getRlpItems(str, offset);
 
-        dumpItems(items3, nitems3, str);
+            dumpItems(itemslog, nitemslog, str);
         
-        assert.equal(nitems3, 3);
-        
-        console.log('log 1');
-        const nitems4 = (await this.helper.getRlpNumItems(str, items2.offsets[0].toNumber() + items2.lengths[0].toNumber())).toNumber();
-        const items4 = await this.helper.getRlpItems(str, items2.offsets[0].toNumber() + items2.lengths[0].toNumber());
-
-        dumpItems(items4, nitems4, str);
-        
-        assert.equal(nitems4, 3);
-        
-        console.log('log 2');
-        const nitems5 = (await this.helper.getRlpNumItems(str, items2.offsets[1].toNumber() + items2.lengths[1].toNumber())).toNumber();
-        const items5 = await this.helper.getRlpItems(str, items2.offsets[1].toNumber() + items2.lengths[1].toNumber());
-
-        dumpItems(items5, nitems5, str);
-        
-        assert.equal(nitems5, 3);
-        
-        console.log('log 3');
-        const nitems6 = (await this.helper.getRlpNumItems(str, items2.offsets[2].toNumber() + items2.lengths[2].toNumber())).toNumber();
-        const items6 = await this.helper.getRlpItems(str, items2.offsets[2].toNumber() + items2.lengths[2].toNumber());
-
-        dumpItems(items6, nitems6, str);
-        
-        assert.equal(nitems6, 3);
-        
-        console.log('log 4');
-        const nitems7 = (await this.helper.getRlpNumItems(str, items2.offsets[3].toNumber() + items2.lengths[3].toNumber())).toNumber();
-        const items7 = await this.helper.getRlpItems(str, items2.offsets[3].toNumber() + items2.lengths[3].toNumber());
-
-        dumpItems(items7, nitems7, str);
-        
-        assert.equal(nitems7, 3);
+            assert.equal(nitemslog, 3);
+        }
     });
     
     it('get two bytes', async function () {
