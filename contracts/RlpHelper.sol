@@ -46,5 +46,9 @@ contract RlpHelper {
     function rlpItemToAddress(bytes memory data, uint offset) public pure returns(address) {
         return RlpLibrary.rlpItemToAddress(data, offset);
     }
+    
+    function rlpItemToBytes32(bytes memory data, uint offset) public pure returns(bytes32) {
+        return RlpLibrary.rlpItemToBytes32(data, offset);
+    }
 }
 

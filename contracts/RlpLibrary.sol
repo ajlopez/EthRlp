@@ -164,5 +164,11 @@ library RlpLibrary {
             result := div(mload(add(add(data, 0x20), offset)), 0x1000000000000000000000000)
         }
     }
+    
+    function rlpItemToBytes32(bytes memory data, uint offset) internal pure returns (bytes32 result) {
+        assembly {
+            result := mload(add(add(data, 0x20), offset))
+        }
+    }
 }
 
