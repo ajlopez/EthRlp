@@ -170,5 +170,13 @@ library RlpLibrary {
             result := mload(add(add(data, 0x20), offset))
         }
     }
+    
+    function rlpItemToUint256(bytes memory data, uint offset, uint length) internal pure returns (uint256 result) {
+        assembly {
+            result := mload(add(add(data, 0x20), offset))
+        }
+        
+        result = result / (256 ** (0x20 - length));
+    }
 }
 
